@@ -26,6 +26,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 * `jj workspace add` now also works for empty destination directories.
 
+* Conflict labels can now contain more information about where the sides of
+  the conflict came from. Currently, only some commands add conflict labels.
+
 ### Fixed bugs
 
 * Broken symlink on Windows. [#6934](https://github.com/jj-vcs/jj/issues/6934).
