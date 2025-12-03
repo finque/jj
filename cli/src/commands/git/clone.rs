@@ -231,7 +231,10 @@ pub fn cmd_git_clone(
     if let Some(name) = &working_branch {
         let working_symbol = name.to_remote_symbol(remote_name);
         if working_is_default {
-            write_repository_level_trunk_alias(ui, workspace_command.repo_path(), working_symbol)?;
+            // For repositories created by the current command, config_env.repo_path is None
+            let mut config = command.config_env().clone();
+            config.reset_repo_path(workspace_command.repo_path());
+            write_repository_level_trunk_alias(ui, &config, working_symbol)?;
         }
         let working_branch_remote_ref = workspace_command
             .repo()
@@ -265,7 +268,7 @@ fn init_workspace(
     wc_path: &Path,
     colocate: bool,
 ) -> Result<WorkspaceCommandHelper, CommandError> {
-    let settings = command.settings_for_new_workspace(wc_path)?;
+    let settings = command.settings_for_new_workspace(ui, wc_path)?;
     let (workspace, repo) = if colocate {
         Workspace::init_colocated_git(&settings, wc_path)?
     } else {
