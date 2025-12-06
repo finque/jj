@@ -3110,8 +3110,9 @@ impl DiffSelector {
     }
 }
 
+// TODO: Delete in jj 0.43+
 #[derive(Clone, Debug)]
-pub struct RemoteBookmarkNamePattern {
+pub(crate) struct RemoteBookmarkNamePattern {
     pub bookmark: StringPattern,
     pub remote: StringPattern,
 }
