@@ -2633,12 +2633,19 @@ See https://docs.jj-vcs.dev/latest/working-copy/#stale-working-copy \
             )),
         ),
         Ok(WorkingCopyFreshness::SiblingOperation) => Err(
-            SnapshotWorkingCopyError::StaleWorkingCopy(internal_error(format!(
-                "The repo was loaded at operation {}, which seems to be a sibling of the working \
-                 copy's operation {}",
-                short_operation_hash(repo.op_id()),
-                short_operation_hash(&old_op_id)
-            ))),
+            SnapshotWorkingCopyError::StaleWorkingCopy(user_error_with_hint(
+                format!(
+                    "The repo was loaded at operation {}, which seems to be a sibling of the \
+                     working copy's operation {}",
+                    short_operation_hash(repo.op_id()),
+                    short_operation_hash(&old_op_id)
+                ),
+                format!(
+                    "Run `jj op integrate {}` to add the working copy's operation to the \
+                     operation log.",
+                    short_operation_hash(&old_op_id)
+                ),
+            )),
         ),
         Err(OpStoreError::ObjectNotFound { .. }) => Err(
             SnapshotWorkingCopyError::StaleWorkingCopy(user_error_with_hint(
